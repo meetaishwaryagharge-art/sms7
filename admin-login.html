@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Authentication | Control Hub</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Sora -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Sora', 'sans-serif'],
+          },
+          colors: {
+            cyber: {
+              bg: '#030712',
+              card: 'rgba(15, 23, 42, 0.45)',
+              primary: '#0ea5e9',
+              accent: '#06b6d4',
+              border: 'rgba(14, 165, 233, 0.2)',
+              text: '#f8fafc'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 50% 50%, #0f172a 0%, #030712 100%);
+    }
+    .glass-panel {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .neon-glow:focus {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-cyber-bg text-cyber-text min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+
+  <!-- Ambient Background Blobs -->
+  <div class="absolute w-[500px] height-[500px] rounded-full bg-cyan-500/10 blur-[100px] top-[-10%] right-[-10%] pointer-events-none"></div>
+  <div class="absolute w-[400px] height-[400px] rounded-full bg-sky-500/10 blur-[100px] bottom-[-10%] left-[-10%] pointer-events-none"></div>
+
+  <!-- Main Login Card -->
+  <div class="w-full max-w-md glass-panel bg-cyber-card border border-cyber-border rounded-2xl p-8 shadow-2xl relative z-10 transition-all duration-300 hover:border-cyber-primary/40">
+    
+    <!-- Logo & Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-cyber-primary to-cyber-accent mb-4 shadow-lg shadow-cyber-primary/20">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+      <h1 class="font-display font-bold text-2xl tracking-tight bg-gradient-to-r from-cyber-primary to-cyber-accent bg-clip-text text-transparent">
+        ADMIN GATEWAY
+      </h1>
+      <p class="text-xs text-slate-400 mt-2 uppercase tracking-widest">Authorized Personnel Only</p>
+    </div>
+
+    <!-- Authentication Form -->
+    <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-6">
+      
+      <!-- Email Input -->
+      <div>
+        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Workspace Email</label>
+        <div class="relative">
+          <input 
+            type="email" 
+            id="email" 
+            required 
+            placeholder="admin@internal.system" 
+            class="w-full bg-slate-950/60 border border-cyber-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyber-accent neon-glow text-white placeholder-slate-600 transition-all"
+          >
+        </div>
+      </div>
+
+      <!-- Password Input -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Security Key</label>
+          <a href="#" class="text-xs text-cyber-primary hover:text-cyber-accent transition-colors">Forgot Key?</a>
+        </div>
+        <div class="relative">
+          <input 
+            type="password" 
+            id="password" 
+            required 
+            placeholder="••••••••••••" 
+            class="w-full bg-slate-950/60 border border-cyber-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyber-accent neon-glow text-white placeholder-slate-600 transition-all"
+          >
+        </div>
+      </div>
+
+      <!-- Remember Session Checkbox -->
+      <div class="flex items-center">
+        <input 
+          type="checkbox" 
+          id="remember" 
+          class="w-4 h-4 rounded bg-slate-950 border-cyber-border text-cyber-primary focus:ring-cyber-primary focus:ring-offset-slate-900 accent-cyber-primary"
+        >
+        <label for="remember" class="ml-2 text-xs text-slate-400 select-none cursor-pointer">Keep secure session active</label>
+      </div>
+
+      <!-- Action Button -->
+      <button 
+        type="submit" 
+        class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyber-primary to-cyber-accent hover:from-cyber-accent hover:to-cyber-primary text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyber-primary/20 transform hover:-translate-y-0.5 active:translate-y-0"
+      >
+        Initialize Access
+      </button>
+    </form>
+
+    <!-- Footer Security Notice -->
+    <div class="mt-8 pt-6 border-t border-slate-800/60 text-center">
+      <p class="text-[10px] text-slate-500 tracking-wide">
+        IP logs and access vector tokens are recorded for auditing parameters. Unauthorized attempts are instantly routed to threat response configurations.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function handleLogin(e) {
+  e.preventDefault(); // Stop the form from refreshing the page
+  
+  // 1. Get the values the user typed in
+  const emailInput = document.getElementById('email').value.trim();
+  const passwordInput = document.getElementById('password').value.trim();
+  
+  // 2. Define your Admin credentials here
+  const ADMIN_EMAIL = "admin@instavalue.com";
+  const ADMIN_PASSWORD = "instavalue2026"; 
+
+  const button = e.target.querySelector('button');
+  
+  // 3. Validate credentials
+  if (emailInput === ADMIN_EMAIL && passwordInput === ADMIN_PASSWORD) {
+    button.innerHTML = `<span>Connecting Matrix...</span>`;
+    button.disabled = true;
+
+    // Route to your admin dashboard file upon success
+    setTimeout(() => {
+      window.location.href = 'admindashboard.html'; 
+    }, 1000);
+  } else {
+    // Alert the user if the credentials don't match
+    alert("Unauthorized Access Vector: Invalid Security Key or Workspace Email.");
+  }
+}
+  </script>
+</body>
+</html>

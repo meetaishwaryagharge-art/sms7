@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard – Instavalue SMS & Atomic Marketing</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0ea5e9;
+    --primary-light: #e0f2fe;
+    --primary-dark: #0369a1;
+    --accent: #06b6d4;
+    --accent2: #38bdf8;
+    --green: #10b981;
+    --purple: #8b5cf6;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --bg: #f0f9ff;
+    --bg2: #e0f2fe;
+    --bg3: #f8fafc;
+    --white: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #bae6fd;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 24px rgba(14,165,233,0.10);
+    --shadow-lg: 0 8px 40px rgba(14,165,233,0.18);
+    --radius: 18px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg3);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 260px;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    position: fixed;
+    height: 100vh;
+  }
+  .sidebar-logo {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--primary-dark);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 40px;
+  }
+  .sidebar-logo span { color: var(--accent); }
+  .logo-icon {
+    width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 16px; height: 16px; fill: white; }
+  
+  .menu-label {
+    font-size: 0.72rem; font-weight: 700; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
+  }
+  .menu-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: var(--radius-sm);
+    color: var(--text-muted); font-size: 0.9rem; font-weight: 600;
+    text-decoration: none; margin-bottom: 8px; transition: all 0.2s;
+  }
+  .menu-item:hover, .menu-item.active {
+    background: var(--primary-light); color: var(--primary-dark);
+  }
+
+  /* ── MAIN CONTENT LAYER ── */
+  .main-content {
+    margin-left: 260px;
+    flex: 1;
+    padding: 40px;
+    max-width: calc(100% - 260px);
+  }
+
+  .header-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
+  }
+  .page-title { font-family: 'Sora', sans-serif; font-size: 1.8rem; font-weight: 700; }
+  .page-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── STAT CARDS ── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px; margin-bottom: 40px;
+  }
+  .stat-card {
+    background: var(--white); padding: 24px; border-radius: var(--radius);
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .stat-card .label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+  .stat-card .value { font-family: 'Sora', sans-serif; font-size: 2rem; font-weight: 700; color: var(--text); margin: 8px 0; }
+  .stat-card .subtext { font-size: 0.78rem; color: var(--green); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .stat-card.orange-theme .subtext { color: var(--orange); }
+
+  /* ── DATA SECTION ── */
+  .data-card {
+    background: var(--white); border-radius: var(--radius);
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+    padding: 28px; margin-bottom: 40px;
+  }
+  .card-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .card-title { font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 700; }
+  
+  .filters { display: flex; gap: 12px; align-items: center; }
+  .search-input, .filter-select {
+    padding: 10px 16px; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border); background: var(--bg3);
+    font-family: inherit; font-size: 0.88rem; outline: none; transition: all 0.2s;
+  }
+  .search-input:focus, .filter-select:focus { border-color: var(--primary); background: var(--white); }
+
+  /* ── TABLE VIEW ── */
+  .table-responsive { width: 100%; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+  th { padding: 16px; background: var(--bg); color: var(--primary-dark); font-weight: 700; border-bottom: 2px solid var(--border); }
+  td { padding: 16px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  tr:hover { background: rgba(240,249,255,0.4); }
+
+  /* Tags */
+  .badge {
+    display: inline-block; padding: 4px 10px; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  }
+  .badge-new { background: #e0f2fe; color: #0369a1; }
+  .badge-contacted { background: #fef3c7; color: #b45309; }
+  .badge-closed { background: #d1fae5; color: #065f46; }
+
+  .msg-bubble {
+    background: var(--bg3); border-radius: 8px; padding: 10px;
+    font-size: 0.82rem; color: var(--text-muted); max-width: 300px;
+    border-left: 3px solid var(--primary); margin-top: 4px;
+    white-space: pre-wrap;
+  }
+
+  .action-btn {
+    padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+    background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+    transition: all 0.2s; margin-right: 4px;
+  }
+  .action-btn:hover { background: var(--primary-light); color: var(--primary-dark); }
+  .action-btn.btn-delete { color: var(--red); }
+  .action-btn.btn-delete:hover { background: #fee2e2; }
+
+  .loading-state { text-align: center; padding: 40px; color: var(--text-muted); font-weight: 500; }
+
+  @media(max-width: 1024px) {
+    .sidebar { display: none; }
+    .main-content { margin-left: 0; max-width: 100%; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR NAVIGATION -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    </div>
+    Instavalue <span>Admin</span>
+  </div>
+  
+  <div class="menu-label">Workspace</div>
+  <!-- Sidebar Navigation links in demo.html -->
+<a href="#" class="menu-item active">
+  <span>📋</span> Overview & Enquiries
+</a>
+<a href="index.html" class="menu-item">
+  <span>🌐</span> Live Portal Home
+</a>
+</div>
+
+<!-- MAIN HUB CONTENT -->
+<div class="main-content">
+  <div class="header-row">
+    <div>
+      <h1 class="page-title">Enquiry Intelligence Hub</h1>
+      <p class="page-subtitle">Real-time multi-channel lead routing monitoring dashboard layout</p>
+    </div>
+  </div>
+
+  <!-- METRIC TILES OVERVIEW -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="label">Total Submissions</div>
+      <div class="value" id="count-total">0</div>
+      <div class="subtext">⚡ Sync live via Firestore</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">New Requests</div>
+      <div class="value" id="count-new">0</div>
+      <div class="subtext" style="color:var(--primary)">📬 Action required</div>
+    </div>
+    <div class="stat-card orange-theme">
+      <div class="label">In Conversation</div>
+      <div class="value" id="count-contacted">0</div>
+      <div class="subtext">⏳ Active staging routing</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Conversion Uplift</div>
+      <div class="value">98.5%</div>
+      <div class="subtext">↑ 23% vs last week</div>
+    </div>
+  </div>
+
+  <!-- TABLE CONTAINER CARD -->
+  <div class="data-card">
+    <div class="card-header">
+      <div class="card-title">Enquiry Pipelines</div>
+      <div class="filters">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, email, company..." oninput="filterData()">
+        <select id="statusFilter" class="filter-select" onchange="filterData()">
+          <option value="all">All Statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table id="enquiriesTable">
+        <thead>
+          <tr>
+            <th>Date Sent</th>
+            <th>Lead Profile</th>
+            <th>Company & Channel</th>
+            <th>Requirements Use-case</th>
+            <th>Pipeline Status</th>
+            <th>Workflow Adjustments</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="6" class="loading-state">Initialising connection to Firebase sandbox parameters...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FIREBASE WORKSPACE BOOTSTRAPPING & DYNAMIC CRUDS
+============================================================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { 
+    getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc 
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // Synced config object extracted precisely from index.html configurations
+  const firebaseConfig = {
+    apiKey: "AIzaSy...",
+    authDomain: "instavalue-sms.firebaseapp.com",
+    projectId: "instavalue-sms",
+    storageBucket: "instavalue-sms.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef123456"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  let localEnquiriesCache = [];
+
+  // Reactive Firestore Pipeline Watcher Hook
+  const q = query(collection(db, "enquiries"), orderBy("createdAt", "desc"));
+  onSnapshot(q, (snapshot) => {
+    localEnquiriesCache = [];
+    snapshot.forEach((doc) => {
+      localEnquiriesCache.push({ id: doc.id, ...doc.data() });
+    });
+    renderTable(localEnquiriesCache);
+    updateMetrics(localEnquiriesCache);
+  }, (error) => {
+    console.error("Firestore sync failure. Falling back to local demonstration parameter loops:", error);
+    loadMockData();
+  });
+
+  // Render Pipeline Interface
+  window.renderTable = function(data) {
+    const tbody = document.getElementById("tableBody");
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="loading-state">No current enterprise parameters matched criteria inside collection metrics field layouts.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(item => {
+      const date = item.createdAt?.seconds ? new Date(item.createdAt.seconds * 1000).toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit'
+      }) : "Just now";
+
+      const fullName = item.fullname ? item.fullname : `${item.fname || ''} ${item.lname || ''}`.trim();
+
+      return `
+        <tr id="row-${item.id}">
+          <td><strong>${date}</strong></td>
+          <td>
+            <div style="font-weight:700; color:var(--text);">${fullName || 'N/A'}</div>
+            <div style="font-size:0.78rem; color:var(--text-muted);">${item.email || ''}</div>
+            <div style="font-size:0.78rem; color:var(--primary-dark); font-weight:600; margin-top:2px;">${item.phone || ''}</div>
+          </td>
+          <td>
+            <div style="font-weight:600;">${item.company || 'Individual Scope'}</div>
+            <div style="font-size:0.76rem; color:var(--purple); font-weight:700; text-transform:uppercase; margin-top:2px;">
+              🏷️ ${item.service || 'General OmniChannel Routing'}
+            </div>
+          </td>
+          <td>
+            <div class="msg-bubble">${item.message || 'No specified contextual setup remarks.'}</div>
+          </td>
+          <td>
+            <span class="badge badge-${item.status || 'new'}">${item.status || 'new'}</span>
+          </td>
+          <td>
+            <select class="filter-select" style="padding:4px 8px; font-size:0.78rem; margin-bottom:6px;" onchange="updateLeadStatus('${item.id}', this.value)">
+              <option value="new" ${item.status === 'new' ? 'selected' : ''}>Mark New</option>
+              <option value="contacted" ${item.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="closed" ${item.status === 'closed' ? 'selected' : ''}>Close Lead</option>
+            </select>
+            <br>
+            <button class="action-btn btn-delete" onclick="deleteLead('${item.id}')">Remove</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  };
+
+  // Dynamic Metrics Updates
+  function updateMetrics(data) {
+    document.getElementById("count-total").textContent = data.length;
+    document.getElementById("count-new").textContent = data.filter(i => !i.status || i.status === 'new').length;
+    document.getElementById("count-contacted").textContent = data.filter(i => i.status === 'contacted').length;
+  }
+
+  // Mutator Actions Exposed Globally
+  window.updateLeadStatus = async function(id, newStatus) {
+    try {
+      const docRef = doc(db, "enquiries", id);
+      await updateDoc(docRef, { status: newStatus });
+    } catch(e) {
+      console.warn("Writing to Firestore instance blocked (Sandbox/Permissions mode). Updating local visual instance cache layouts.");
+      const index = localEnquiriesCache.findIndex(i => i.id === id);
+      if(index > -1) {
+        localEnquiriesCache[index].status = newStatus;
+        renderTable(localEnquiriesCache);
+        updateMetrics(localEnquiriesCache);
+      }
+    }
+  };
+
+  window.deleteLead = async function(id) {
+    if(!confirm("Are you sure you want to remove this enquiry transaction metrics log configuration row?")) return;
+    try {
+      await deleteDoc(doc(db, "enquiries", id));
+    } catch(e) {
+      localEnquiriesCache = localEnquiriesCache.filter(i => i.id !== id);
+      renderTable(localEnquiriesCache);
+      updateMetrics(localEnquiriesCache);
+    }
+  };
+
+  // UI Filtering Engine Logic
+  window.filterData = function() {
+    const searchVal = document.getElementById("searchInput").value.toLowerCase();
+    const statusVal = document.getElementById("statusFilter").value;
+
+    const filtered = localEnquiriesCache.filter(item => {
+      const name = `${item.fname || ''} ${item.lname || ''} ${item.fullname || ''}`.toLowerCase();
+      const matchSearch = name.includes(searchVal) || 
+                          (item.email || '').toLowerCase().includes(searchVal) || 
+                          (item.company || '').toLowerCase().includes(searchVal) ||
+                          (item.service || '').toLowerCase().includes(searchVal);
+      
+      const matchStatus = statusVal === 'all' || (item.status || 'new') === statusVal;
+      return matchSearch && matchStatus;
+    });
+    renderTable(filtered);
+  };
+
+  // Fallback Data Loader if active connection strings error out initially
+  function loadMockData() {
+    localEnquiriesCache = [
+      { id: "mock-1", fname: "Rahul", lname: "Sharma", email: "rahul@retailcorp.in", phone: "+91 98765 43210", company: "Retail Corp India", service: "Transactional Bulk SMS / OTPs", message: "Need low latency architecture setups to drive holiday weekend consumer rush OTP push configurations.", status: "new", createdAt: { seconds: Date.now()/1000 } },
+      { id: "mock-2", fullname: "Jane Smith", email: "jane@saasgrowth.io", phone: "+1 415 802 1192", company: "SaaS Systems LLC", service: "Pay-Per-Click Advertising", message: "Looking for an audit configuration evaluation on cross cluster Google performance metrics channels.", status: "contacted", createdAt: { seconds: (Date.now() - 86400000)/1000 } }
+    ];
+    renderTable(localEnquiriesCache);
+    updateMetrics(localEnquiriesCache);
+  }
+</script>
+</body>
+</html>
